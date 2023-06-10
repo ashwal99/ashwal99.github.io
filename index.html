@@ -1,15 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>My Website</title>
-  </head>
-  <body>
-    <main>
-        <h1>Welcome to My Website</h1>  
-        <p>This is my new website which is hosted on GitHub Pages!</p>
-    </main>
-  </body>
+<html>
+<head>
+    <title>Chatbot UI with ChatGPT</title>
+    <style>
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .chat-log {
+            height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .user-input {
+            margin-top: 10px;
+            display: flex;
+        }
+
+        .user-input input[type="text"] {
+            flex: 1;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .user-input input[type="submit"] {
+            margin-left: 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chatbot UI with ChatGPT</h1>
+        <div class="chat-log" id="chatLog"></div>
+        <div class="user-input">
+            <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off">
+            <input type="submit" value="Send" onclick="sendMessage()">
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@openai/chatgpt@1.0"></script>
+    <script>
+        const chatLogElement = document.getElementById('chatLog');
+        const userInputElement = document.getElementById('userInput');
+        const chatGPT = new ChatGPT({
+            model: 'gpt-3.5-turbo',
+            token: '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',
+            language: 'en'
+        });
+
+        // Function to display a message in the chat log
+        function displayMessage(message, sender) {
+            const messageElement = document.createElement('p');
+            messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            chatLogElement.appendChild(messageElement);
+            chatLogElement.scrollTop = chatLogElement.scrollHeight;
+        }
+
+        // Function to send a user message to the chatbot
+        function sendMessage() {
+            const userInput = userInputElement.value.trim();
+
+            if (userInput === '') {
+                return;
+            }
+
+            displayMessage(userInput, 'User');
+            userInputElement.value = '';
+            userInputElement.focus();
+
+            chatGPT.send(userInput).then(response => {
+                const message = response.choices[0].message.content;
+                displayMessage(message, 'Chatbot');
+            }).catch(error => {
+                console.log('An error occurred while sending the message:', error);
+                displayMessage('Oops! An error occurred.', 'Chatbot');
+            });
+        }
+
+        // Initial greeting message from the chatbot
+        displayMessage('Hi! How can I assist you?', 'Chatbot');
+    </script>
+</body>
 </html>
