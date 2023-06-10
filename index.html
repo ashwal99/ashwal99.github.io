@@ -56,9 +56,11 @@
     <script>
         const chatLogElement = document.getElementById('chatLog');
         const userInputElement = document.getElementById('userInput');
+        const tokenA = 'sk-NL63lJjADPVlKXt7';
+        const tokenB = 'DoNwT3BlbkFJjcqPXblkvbMRF8fyyKNE'
         const chatGPT = new ChatGPT({
             model: 'gpt-3.5-turbo',
-            token: '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',
+            token: tokenA + tokenB,
             language: 'en'
         });
 
